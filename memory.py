@@ -18,6 +18,10 @@ car = path('car.gif')
 tiles = list(range(32)) * 2
 state = {'mark': None}
 hide = [True] * 64
+#Variables para las funciones futuras.
+writer = Turtle(visible=True)
+finish = Turtle(visible=True)
+GameOver = {'YouWin' : 0, 'Message': 'YOU WIN', 'stop': 'YOU LOSE'}
 
 
 def square(x, y):
@@ -54,6 +58,13 @@ def tap(x, y):
         hide[spot] = False
         hide[mark] = False
         state['mark'] = None
+    
+    #Tras tener las 64 casillas liberadas se soltara el mensaje
+    if GameOver['YouWin'] == 32:
+        finish.goto(0, 210)
+        finish.color("black")
+        finish.undo()
+        finish.write(GameOver['Message'], font=('Arial', 55, 'normal'))
 
 
 def draw():
@@ -73,10 +84,12 @@ def draw():
     if mark is not None and hide[mark]:
         x, y = xy(mark)
         up()
-        goto(x + 2, y)
+        #Se cambio la posicion en X para que estubieran lo más centrado posibles.
+        goto(x+10, y)
         color('black')
-        write(tiles[mark], font=('Arial', 30, 'normal'))
+        write(tiles[mark],font=('Arial', 30, 'normal'))
 
+    
     update()
     ontimer(draw, 100)
 
