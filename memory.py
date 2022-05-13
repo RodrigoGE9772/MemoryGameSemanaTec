@@ -1,27 +1,25 @@
-"""Memory, puzzle game of number pairs.
-
-Exercises:
-
-1. Count and print how many taps occur.
-2. Decrease the number of tiles to a 4x4 grid.
-3. Detect when all tiles are revealed.
-4. Center single-digit tile.
-5. Use letters instead of tiles.
 """
-
+Author 1: Rodrigo García
+Author 2: Misael Chávez
+"""
+from ast import Break
 from random import *
 from turtle import *
 
 from freegames import path
 
+
 car = path('car.gif')
-tiles = list(range(32)) * 2
+#lista de simbolos de la nueva lista en vez de numeros.
+tiles = ["☺", '☻','♥','♦','♣','♠','•','○','◙','♂','♀','♪','♫','☼','►','◄','↕','‼','¶','§','@','↨','↑','↓','→','←','∟','↔','▲','▼','©']*2
+Taps = {'taps': 0}
 state = {'mark': None}
 hide = [True] * 64
 #Variables para las funciones futuras.
 writer = Turtle(visible=True)
 finish = Turtle(visible=True)
 GameOver = {'YouWin' : 0, 'Message': 'YOU WIN', 'stop': 'YOU LOSE'}
+
 
 
 def square(x, y):
@@ -51,13 +49,35 @@ def tap(x, y):
     """Update mark and hidden tiles based on tap."""
     spot = index(x, y)
     mark = state['mark']
+    
 
-    if mark is None or mark == spot or tiles[mark] != tiles[spot]:
+    writer.undo()
+    writer.write(Taps['taps'])
+    
+    #Se tiene el contador de "taps" para detectar cuantas veces a presionado el mouse, y se mostrara el contador.
+    #Se tiene la funcion de GameOver para cuando no se completo antes de los 128 taps. (Se puede quitar o modificar el limite)
+    if Taps['taps'] == 128:
+        finish.goto(0, 210)
+        finish.color("black")
+        finish.undo()
+        finish.write(GameOver['stop'], font=('Arial', 55, 'normal'))
+        Break
+    elif mark is None or mark == spot or tiles[mark] != tiles[spot]:
         state['mark'] = spot
+        Taps['taps'] += 1
+        writer.goto(220, 170)
+        writer.color('black')
+        writer.write(Taps['taps'], font=('Arial', 30, 'normal'))
     else:
+        GameOver['YouWin'] += 1         
         hide[spot] = False
         hide[mark] = False
         state['mark'] = None
+        Taps['taps'] += 1
+        writer.goto(220, 170)
+        writer.color('black')
+        writer.write(Taps['taps'], font=('Arial', 30, 'normal'))
+
     
     #Tras tener las 64 casillas liberadas se soltara el mensaje
     if GameOver['YouWin'] == 32:
